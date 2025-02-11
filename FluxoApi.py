@@ -9,20 +9,17 @@ import json
 # 🟢 Debug para verificar se a variável está carregada
 print("🔍 Verificando variável GOOGLE_CREDENTIALS...")
 
+# Carregar credenciais do Google Sheets do Secret do GitHub
 credenciais_json = os.getenv("GOOGLE_CREDENTIALS")
 if not credenciais_json:
     raise ValueError("❌ ERRO: A variável GOOGLE_CREDENTIALS não foi encontrada!")
 
 print("✅ Variável GOOGLE_CREDENTIALS encontrada!")
 
+# Converter o JSON string para dicionário
 credenciais_dict = json.loads(credenciais_json)
 
-# 🔹 Carregar credenciais do Google Sheets do Secret do GitHub
-credenciais_json = os.getenv("GOOGLE_CREDENTIALS")
-if not credenciais_json:
-    raise ValueError("Erro: Credenciais não encontradas!")
-credenciais_dict = json.loads(credenciais_json)
-
+# 🔹 Configurar escopo e autenticar
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 credenciais = ServiceAccountCredentials.from_json_keyfile_dict(credenciais_dict, scope)
 cliente = gspread.authorize(credenciais)
