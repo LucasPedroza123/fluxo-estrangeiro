@@ -25,8 +25,8 @@ jobs:
 
       - name: Criar arquivo de credenciais
         run: |
-          echo "${{ secrets.GOOGLE_CREDENTIALS }}" | jq . > credenciais.json
-          cat credenciais.json  # Apenas para debug
+          echo "${{ secrets.GOOGLE_CREDENTIALS }}" > credenciais.json
+          cat credenciais.json  # Apenas para debug, pode remover depois
 
       - name: Executar script
         run: python FluxoApi.py
