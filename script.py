@@ -11,16 +11,24 @@ CREDENTIALS_PATH = "credentials.json"
 
 if not os.path.exists(CREDENTIALS_PATH):
     credentials_json = os.getenv("GOOGLE_SHEETS_CREDENTIALS")
-    
+
     if credentials_json:
-        credentials_data = json.loads(credentials_json)
+        try:
+            # Remover espaços extras e converter JSON corretamente
+            credentials_data = json.loads(credentials_json.strip())
 
-        # Corrigir a quebra de linha na private_key (GitHub Secrets salva com `\n` errado)
-        credentials_data["private_key"] = credentials_data["private_key"].replace("\\n", "\n")
+            # Substituir `\\n` por `\n` para corrigir a private_key
+            if "private_key" in credentials_data:
+                credentials_data["private_key"] = credentials_data["private_key"].replace("\\n", "\n")
 
-        # Salvar o arquivo corrigido
-        with open(CREDENTIALS_PATH, "w") as cred_file:
-            json.dump(credentials_data, cred_file, indent=4)
+            # Salvar credenciais corrigidas no arquivo
+            with open(CREDENTIALS_PATH, "w", encoding="utf-8") as f:
+                json.dump(credentials_data, f, indent=4)
+
+            print("✅ Credenciais JSON foram salvas corretamente!")
+        except json.JSONDecodeError as e:
+            print(f"❌ ERRO AO DECODIFICAR JSON: {e}")
+            exit(1)
 
 # 🟢 Configuração da API do Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
