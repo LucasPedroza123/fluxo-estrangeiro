@@ -1,6 +1,16 @@
 import os
 import json
 
+# Teste para verificar se o Secret está carregando
+credentials_json = os.getenv("GOOGLE_SHEETS_CREDENTIALS")
+
+if not credentials_json:
+    print("❌ ERRO: O Secret 'GOOGLE_SHEETS_CREDENTIALS' não foi carregado corretamente!")
+    exit(1)
+
+print("🔍 JSON Recebido do GitHub Secrets (Primeiros 500 caracteres):")
+print(credentials_json[:500])  # Exibir os primeiros 500 caracteres para depuração
+
 CREDENTIALS_PATH = "credentials.json"
 
 if not os.path.exists(CREDENTIALS_PATH):
