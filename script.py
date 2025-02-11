@@ -1,17 +1,26 @@
+import os
+import json
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-import json
-import os
 
-# 🟢 Criar o arquivo JSON com credenciais a partir do Secret (caso esteja rodando no GitHub Actions)
+# 🟢 Criar o arquivo JSON com as credenciais corretamente formatadas
 CREDENTIALS_PATH = "credentials.json"
 
 if not os.path.exists(CREDENTIALS_PATH):
-    with open(CREDENTIALS_PATH, "w") as cred_file:
-        cred_file.write(os.getenv("GOOGLE_SHEETS_CREDENTIALS", ""))
+    credentials_json = os.getenv("GOOGLE_SHEETS_CREDENTIALS")
+    
+    if credentials_json:
+        credentials_data = json.loads(credentials_json)
+
+        # Corrigir a quebra de linha na private_key (GitHub Secrets salva com `\n` errado)
+        credentials_data["private_key"] = credentials_data["private_key"].replace("\\n", "\n")
+
+        # Salvar o arquivo corrigido
+        with open(CREDENTIALS_PATH, "w") as cred_file:
+            json.dump(credentials_data, cred_file, indent=4)
 
 # 🟢 Configuração da API do Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
