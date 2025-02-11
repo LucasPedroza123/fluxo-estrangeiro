@@ -6,6 +6,17 @@ from oauth2client.service_account import ServiceAccountCredentials
 import os
 import json
 
+# 🟢 Debug para verificar se a variável está carregada
+print("🔍 Verificando variável GOOGLE_CREDENTIALS...")
+
+credenciais_json = os.getenv("GOOGLE_CREDENTIALS")
+if not credenciais_json:
+    raise ValueError("❌ ERRO: A variável GOOGLE_CREDENTIALS não foi encontrada!")
+
+print("✅ Variável GOOGLE_CREDENTIALS encontrada!")
+
+credenciais_dict = json.loads(credenciais_json)
+
 # 🔹 Carregar credenciais do Google Sheets do Secret do GitHub
 credenciais_json = os.getenv("GOOGLE_CREDENTIALS")
 if not credenciais_json:
